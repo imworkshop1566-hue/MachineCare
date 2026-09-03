@@ -7,15 +7,18 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="container header-inner">
-      <div class="brand">
-        <div class="brand-icon">🔧</div>
-        <div><h1>MachineCare</h1><p>ระบบแจ้งซ่อมเครื่องจักรอัตโนมัติ</p></div>
-      </div>
+  <header class="topbar-logo">
+  <div class="container logo-header-inner">
+    <img
+      src="machinecare-logo.png"
+      alt="MachineCare ดูแล ห่วงใย ใส่ใจเครื่องจักร"
+      class="machinecare-logo"
+    >
+    <div class="logo-header-actions">
       <span class="department">ฝ่ายซ่อมบำรุง</span>
     </div>
-  </header>
+  </div>
+</header>
 
   <main class="container main-content">
     <section class="page-heading">
@@ -36,7 +39,10 @@
             <h3>1. ข้อมูลเครื่องจักร</h3>
             <p class="description">เลือกหมายเลขเครื่องที่ต้องการแจ้งซ่อม</p>
             <label>หมายเลขเครื่องจักร</label>
-            <select id="machineSelect"></select>
+            <select id="machineSelect" disabled>
+              <option value="">กำลังโหลดข้อมูลเครื่องจักร...</option>
+            </select>
+            <div id="machineApiStatus" class="api-status loading">กำลังเชื่อมต่อ Power Automate...</div>
           </div>
           <div class="machine-summary">
             <div class="summary-top">
