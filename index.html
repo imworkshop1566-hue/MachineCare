@@ -1,117 +1,42 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MachineCare - ระบบแจ้งซ่อมเครื่องจักร</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header class="topbar-logo">
-  <div class="container logo-header-inner">
+<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Machine Repair </title><link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head><body>
+<header class="hero-banner">
+
     <img
-      src="machinecare-logo.png"
-      alt="MachineCare ดูแล ห่วงใย ใส่ใจเครื่องจักร"
-      class="machinecare-logo"
-    >
-    <div class="logo-header-actions">
-      <span class="department">ฝ่ายซ่อมบำรุง</span>
-    </div>
-  </div>
+        src="images/machinecare-logo.png"
+        alt="MachineCare"
+        class="hero-logo">
+
 </header>
+ <label>🛠 Machine Repair History</label>
+<div class="container"><div class="form-group">
+    <label>หมายเลขเครื่องจักร</label>
+    <select
+    id="machineFilter"
+    onchange="updateDamagePoint()">
+        <option value="">🔧 เลือกหมายเลขเครื่อง</option>
+        
+    </select>
+</div>
 
-  <main class="container main-content">
-    <section class="page-heading">
-      <p class="eyebrow">NEW REPAIR REQUEST</p>
-      <h2>แจ้งปัญหาเครื่องจักร</h2>
-      <p>เลือกเครื่องจักร ระบุความเสียหาย และตรวจสอบประวัติย้อนหลังในหน้าเดียว</p>
-    </section>
+<div class="form-group">
+    <label>จุดที่เกิดความเสียหาย</label>
+    <select id="damageFilter">
+        <option value="">⚠️ เลือกจุดที่เสีย</option>
+    </select>
+</div>
 
-    <div id="successMessage" class="alert success hidden">
-      <div><strong>ส่งใบแจ้งซ่อมเรียบร้อยแล้ว</strong><p id="successText"></p></div>
-      <button id="closeSuccess" class="icon-button" aria-label="ปิด">×</button>
-    </div>
-
-    <div class="layout">
-      <section class="left-column">
-        <article class="card machine-card">
-          <div class="card-body">
-            <h3>1. ข้อมูลเครื่องจักร</h3>
-            <p class="description">เลือกหมายเลขเครื่องที่ต้องการแจ้งซ่อม</p>
-            <label>หมายเลขเครื่องจักร</label>
-            <select id="machineSelect" disabled>
-              <option value="">กำลังโหลดข้อมูลเครื่องจักร...</option>
-            </select>
-            <div id="machineApiStatus" class="api-status loading">กำลังเชื่อมต่อ Power Automate...</div>
-          </div>
-          <div class="machine-summary">
-            <div class="summary-top">
-              <div><h3 id="machineName"></h3><p id="machineModel"></p></div>
-              <span id="machineStatus" class="status"></span>
-            </div>
-            <div class="info-grid">
-              <div class="info-box"><small>สายการผลิต</small><strong id="machineLine"></strong></div>
-              <div class="info-box"><small>พื้นที่ติดตั้ง</small><strong id="machineArea"></strong></div>
-            </div>
-          </div>
-        </article>
-
-        <article class="card card-body">
-          <h3>2. รายละเอียดความเสียหาย</h3>
-          <p class="description">ระบุจุดและอาการที่ตรวจพบ</p>
-          <form id="repairForm">
-            <label for="damagePoint">จุดที่เกิดความเสียหาย</label>
-            <select id="damagePoint" required><option value="">เลือกจุดที่เสียหาย</option></select>
-
-            <label for="symptom">อาการเสียที่พบ</label>
-            <textarea id="symptom" rows="4" required placeholder="ตัวอย่าง: เครื่องหยุดระหว่างทำงาน และมีเสียงผิดปกติ..."></textarea>
-
-            <label>ระดับความเร่งด่วน</label>
-            <div class="priority-group">
-              <button type="button" class="priority" data-level="ต่ำ">ต่ำ</button>
-              <button type="button" class="priority active" data-level="ปานกลาง">ปานกลาง</button>
-              <button type="button" class="priority high" data-level="สูง">สูง</button>
-            </div>
-
-            <label class="upload-button" for="photoInput">📷 แนบรูปภาพความเสียหาย</label>
-            <input id="photoInput" type="file" accept="image/*" hidden>
-            <p id="fileName" class="file-name"></p>
-
-            <button class="primary-button" type="submit">➤ ส่งใบแจ้งซ่อม</button>
-          </form>
-        </article>
-      </section>
-
-      <section class="card history-panel">
-        <div class="history-heading"><div><h3>↻ ประวัติการซ่อมก่อนหน้า</h3><p id="historyCaption"></p></div></div>
-
-        <div class="filters">
-          <div><label>จุดที่เสียหาย</label><select id="historyPoint"></select></div>
-          <div><label>วันที่เริ่มต้น</label><input id="startDate" type="date"></div>
-          <div><label>วันที่สิ้นสุด</label><input id="endDate" type="date"></div>
-          <div><label>ค้นหาประวัติ</label><input id="searchInput" type="search" placeholder="เลขที่, อาการ, ช่าง..."></div>
-          <div class="filter-footer"><span id="filterMessage">ระบบจะกรองและคำนวณ KPI ใหม่โดยอัตโนมัติ</span><button id="clearFilters" class="text-button" type="button">✕ ล้างตัวกรอง</button></div>
-        </div>
-
-        <div class="kpi-grid">
-          <div class="kpi blue"><span>◉</span><strong id="repairCount">0</strong><small>ครั้งที่ซ่อม</small></div>
-          <div class="kpi purple"><span>◷</span><strong id="mttr">0</strong><small>MTTR (นาที)</small></div>
-          <div class="kpi orange"><span>🔧</span><strong id="latestPoint">-</strong><small>จุดซ่อมล่าสุด</small></div>
-        </div>
-
-        <div id="historyList" class="history-list"></div>
-      </section>
-    </div>
-  </main>
-
-  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
-    <div class="modal-card">
-      <div class="modal-heading"><div><small id="modalId"></small><h3>รายละเอียดการซ่อม</h3></div><button id="closeModal" class="icon-button">×</button></div>
-      <div id="modalContent" class="modal-content"></div>
-      <button id="closeModalBottom" class="dark-button">ปิดรายละเอียด</button>
-    </div>
-  </div>
-
-  <script src="app.js"></script>
-</body>
-</html>
+</select>
+<input type="date" id="dateFrom">
+<input type="date" id="dateTo">
+<button onclick="filterData()">
+    Search</button></div>
+    
+  
+         <table><thead><tr><th>Date</th><th>Machine</th><th>Point</th><th>Symptom</th><th>Detail</th></tr></thead>
+            <tbody id="tableBody"></tbody>
+            <div id="mobileHistory"></div>
+        </table><div id='mobileHistory'></div></div><div class='modal' id='detailModal'><div class='modal-content'><span onclick='closeModal()'>✖</span><div id='detailContent'></div></div></div><script src='app.js'></script></body></html>
