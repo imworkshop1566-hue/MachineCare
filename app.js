@@ -84,7 +84,7 @@ async function loadExcelData() {
 
             repairTime:
                 Number(
-                    row["เวลาซ่อม (min)"]
+                    row["repair time(min)"]
                 ) || 0
 
         }));
@@ -228,14 +228,26 @@ function filterData() {
     render(filtered);
 
 }
-
 function render(data) {
+
+    const filteredCount =
+        document.getElementById(
+            "filteredCount"
+        );
+
+    if(filteredCount){
+
+        filteredCount.innerText =
+            data.length;
+
+    }
 
     renderTable(data);
 
     renderMobileCards(data);
 
 }
+
 
 function renderTable(data) {
 
@@ -379,6 +391,33 @@ function closeModal() {
     document.getElementById(
         "detailModal"
     ).style.display = "none";
+
+}
+async function refreshData(){
+
+    const selectedMachine =
+        document.getElementById(
+            "machineFilter"
+        ).value;
+
+    const selectedPoint =
+        document.getElementById(
+            "damageFilter"
+        ).value;
+
+    await loadExcelData();
+
+    document.getElementById(
+        "machineFilter"
+    ).value = selectedMachine;
+
+    updateDamagePoint();
+
+    document.getElementById(
+        "damageFilter"
+    ).value = selectedPoint;
+
+    filterData();
 
 }
 
